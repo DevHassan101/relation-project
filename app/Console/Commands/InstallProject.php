@@ -11,7 +11,7 @@ class InstallProject extends Command
      *
      * @var string
      */
-    protected $signature = 'app:install-project';
+    protected $signature = 'install:project';
 
     /**
      * The console command description.
@@ -25,6 +25,8 @@ class InstallProject extends Command
      */
     public function handle()
     {
-        //
+        $this->call('optimize:clear');
+        $this->call('migrate:fresh');
+        $this->call('db:seed');
     }
 }
