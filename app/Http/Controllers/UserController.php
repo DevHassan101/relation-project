@@ -18,9 +18,9 @@ class UserController extends Controller
         $users = User::with('roles')->orderBy('created_at', 'desc')->paginate(10);
 
         if ($request->ajax()) {
-            $html = view('pages.users.table', compact('users'))->render();
+            $html = view('pages.admin.users.table', compact('users'))->render();
             $records = $users;
-            $pagination = view('pages.append.pagination', compact('records'))->render();
+            $pagination = view('pages.admin.append.pagination', compact('records'))->render();
 
             return response()->json([
                 'error' => false,
@@ -29,7 +29,7 @@ class UserController extends Controller
             ]);
         }
 
-        return view('pages.users.index', compact('users'));
+        return view('pages.admin.users.index', compact('users'));
     }
 
     /**
@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('pages.users.create');
+        return view('pages.admin.users.create');
     }
 
     /**
@@ -89,7 +89,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $user->load('profile');
-        return view('pages.users.edit', compact('user'));
+        return view('pages.admin.users.edit', compact('user'));
     }
 
 
@@ -145,8 +145,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($user->userInfo) {
+            $user->userInfo->delete();
+        }
+
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }

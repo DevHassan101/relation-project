@@ -16,9 +16,9 @@ class PostController extends Controller
         $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(10);
 
         if ($request->ajax()) {
-            $html = view('pages.posts.table', compact('posts'))->render();
+            $html = view('pages.admin.posts.table', compact('posts'))->render();
             $records = $posts;
-            $pagination = view('pages.append.pagination', compact('records'))->render();
+            $pagination = view('pages.admin.append.pagination', compact('records'))->render();
 
             return response()->json([
                 'error' => false,
@@ -27,7 +27,7 @@ class PostController extends Controller
             ]);
         }
 
-        return view('pages.posts.index', compact('posts'));
+        return view('pages.admin.posts.index', compact('posts'));
     }
 
     /**
@@ -35,7 +35,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('pages.posts.create');
+        return view('pages.admin.posts.create');
     }
 
     /**
@@ -60,7 +60,6 @@ class PostController extends Controller
             $image->move(public_path('uploads/posts'), $name_gen);
             $validation['image'] = 'uploads/posts/' . $name_gen;
         }
-
         Post::create($validation);
 
         return redirect()->route('posts.index')->with('success', 'Post created successfully.');
@@ -73,16 +72,17 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $post->load('user');
-        return view('pages.posts.show', compact('post'));
+        return view('pages.admin.posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        return view('pages.admin.posts.edit', compact('post'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -97,7 +97,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $post->comments()->delete();
         $post->delete();
-        return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+
+        return redirect()->route('posts.index')
+            ->with('success', 'Post deleted successfully.');
     }
 }

@@ -17,7 +17,11 @@
            </td>
 
            <td class="px-5 py-5 text-sm bg-white border-b border-gray-200">
-               <p class="text-gray-900 whitespace-no-wrap">{{ $post->is_published ? 'Published' : 'Draft' }}</p>
+            @if ($post->is_published == 1)
+                <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full capitalize">Published</span>
+            @elseif ($post->is_published == 0)
+                <span class="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full capitalize">Draft</span>
+            @endif
            </td>
 
            <td class="px-5 py-5 text-sm text-center bg-white border-b border-gray-200">

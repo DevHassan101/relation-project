@@ -17,9 +17,9 @@ class UserProfileController extends Controller
 
 
         if ($request->ajax()) {
-            $html = view('pages.UserProfile.table', compact('userProfiles'))->render();
+            $html = view('pages.admin.UserProfile.table', compact('userProfiles'))->render();
             $records = $userProfiles;
-            $pagination = view('pages.append.pagination', compact('records'))->render();
+            $pagination = view('pages.admin.append.pagination', compact('records'))->render();
 
             return response()->json([
                 'error' => false,
@@ -28,7 +28,7 @@ class UserProfileController extends Controller
             ]);
         }
 
-        return view('pages.UserProfile.index', compact('userProfiles'));
+        return view('pages.admin.UserProfile.index', compact('userProfiles'));
     }
 
     /**
@@ -36,7 +36,7 @@ class UserProfileController extends Controller
      */
     public function create()
     {
-        return view('pages.UserProfile.create');
+        return view('pages.admin.UserProfile.create');
     }
 
     /**
@@ -56,7 +56,7 @@ class UserProfileController extends Controller
 
         $profile->load('user');
 
-        return view('pages.UserProfile.show', compact('profile'));
+        return view('pages.admin.UserProfile.show', compact('profile'));
     }
 
 
